@@ -14,12 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,6 +86,30 @@ class AccountControllerTest {
             .andExpect(jsonPath("$.userId").value(userId))
             .andExpect(jsonPath("$.accountNumber").value(accountNumber))
             .andExpect(jsonPath("$.unRegisteredAt").value(unRegisteredAt.toString()))
+            .andDo(print());
+    }
+
+    @Test
+    void successGetAccountsByUserId() throws Exception {
+        //given
+        List<AccountDto> accountDtos = List.of(
+            AccountDto.builder().accountNumber("1234567890").balance(1000L).build(),
+            AccountDto.builder().accountNumber("1234567891").balance(2000L).build(),
+            AccountDto.builder().accountNumber("1234567893").balance(3000L).build()
+        );
+        given(accountService.getAccountsByUserId(anyLong()))
+            .willReturn(accountDtos);
+
+        //when
+        //then
+        mockMvc.perform(get("/account?user_id=1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].accountNumber").value("1234567890"))
+            .andExpect(jsonPath("$[0].balance").value(1000))
+            .andExpect(jsonPath("$[1].accountNumber").value("1234567891"))
+            .andExpect(jsonPath("$[1].balance").value(2000))
+            .andExpect(jsonPath("$[2].accountNumber").value("1234567893"))
+            .andExpect(jsonPath("$[2].balance").value(3000))
             .andDo(print());
     }
 }
