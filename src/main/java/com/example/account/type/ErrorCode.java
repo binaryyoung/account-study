@@ -10,6 +10,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR("내부 서버 오류가 발생하였습니다."),
     USER_NOT_FOUND("사용자가 없습니다."),
     ACCOUNT_NOT_FOUND("해당 계좌가 없습니다."),
+    ACCOUNT_TRANSACTION_LOCK("해당 계좌는 사용 중입니다."),
     TRANSACTION_NOT_FOUND("해당 거래가 없습니다."),
     AMOUNT_EXCEED_BALANCE("거래 금액이 계좌 잔액보다 큽니다."),
     USER_ACCOUNT_UNMATCHED("사용자와 계좌의 소유주가 다릅니다."),
