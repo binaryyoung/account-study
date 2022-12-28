@@ -15,9 +15,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 
 import static com.example.account.type.TransactionResultType.S;
+import static com.example.account.type.TransactionType.CANCEL;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -87,5 +89,32 @@ class TransactionControllerTest {
             .andExpect(jsonPath("$.transactionResult").value("S"))
             .andExpect(jsonPath("$.transactionId").value("transactionIdForCancel"))
             .andExpect(jsonPath("$.amount").value(54321));
+    }
+
+    @Test
+    void successQueryTransaction() throws Exception {
+        //given
+        TransactionDto transactionDto = TransactionDto.builder()
+            .accountNumber("1000000000")
+            .transactedAt(LocalDateTime.now())
+            .amount(12345L)
+            .transactionId("testId")
+            .transactionResult(S)
+            .transactionType(CANCEL)
+            .build();
+        given(transactionService.queryTransaction(anyString()))
+            .willReturn(transactionDto);
+
+        //when
+        //then
+        mockMvc.perform(get("/transaction?transactionId=testId"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.accountNumber").value(transactionDto.getAccountNumber()))
+            .andExpect(jsonPath("$.transactionType").value(transactionDto.getTransactionType().toString()))
+            .andExpect(jsonPath("$.transactionResult").value(transactionDto.getTransactionResult().toString()))
+            .andExpect(jsonPath("$.transactionId").value(transactionDto.getTransactionId()))
+            .andExpect(jsonPath("$.amount").value(transactionDto.getAmount()))
+            .andExpect(jsonPath("$.transactedAt").value(transactionDto.getTransactedAt().toString()))
+            .andDo(print());
     }
 }
