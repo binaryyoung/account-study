@@ -41,4 +41,7 @@ public class Transaction {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void cancelBalance(Long amount) {
+    }
 }

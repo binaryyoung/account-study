@@ -4,8 +4,8 @@ import com.example.account.domain.Account;
 import com.example.account.domain.AccountUser;
 import com.example.account.dto.AccountDto;
 import com.example.account.exception.AccountException;
-import com.example.account.repository.AccountUserRepository;
 import com.example.account.repository.AccountRepository;
+import com.example.account.repository.AccountUserRepository;
 import com.example.account.type.AccountStatus;
 import com.example.account.type.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
@@ -16,11 +16,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
