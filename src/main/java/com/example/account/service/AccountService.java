@@ -7,8 +7,10 @@ import com.example.account.exception.AccountException;
 import com.example.account.repository.AccountRepository;
 import com.example.account.repository.AccountUserRepository;
 import com.example.account.type.AccountStatus;
+import com.example.account.type.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -40,19 +42,17 @@ public class AccountService {
 
         validateCreateAccount(accountUser);
 
-        String newAccountNumber = accountRepository.findFirstByOrderByIdDesc()
-            .map(account -> (Integer.parseInt(account.getAccountNumber())) + 1 + "")
-            .orElse("1000000000");
-
-        return AccountDto.fromEntity(accountRepository.save(
+        Account savedAccount = accountRepository.save(
             Account.builder()
                 .accountUser(accountUser)
                 .accountStatus(IN_USE)
-                .accountNumber(newAccountNumber)
                 .balance(initialBalance)
                 .registeredAt(LocalDateTime.now())
                 .build()
-        ));
+        );
+        savedAccount.initAccountNumber();
+
+        return AccountDto.fromEntity(savedAccount);
     }
 
     /**

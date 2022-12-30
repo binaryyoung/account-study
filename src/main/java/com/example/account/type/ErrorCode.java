@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
     INVALID_REQUEST("잘못된 요청입니다."),
+    SYSTEM_MAX_ACCOUNT("시스템에서 생성 가능한 계좌 개수를 초과했습니다."),
     INTERNAL_SERVER_ERROR("내부 서버 오류가 발생하였습니다."),
     USER_NOT_FOUND("사용자가 없습니다."),
     ACCOUNT_NOT_FOUND("해당 계좌가 없습니다."),

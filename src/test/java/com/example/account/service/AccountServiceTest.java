@@ -43,49 +43,21 @@ class AccountServiceTest {
         AccountUser user = AccountUser.builder()
             .id(12L)
             .name("Pobi").build();
+        Account account = Account.builder()
+            .id(1L)
+            .accountUser(user)
+            .build();
         given(accountUserRepository.findById(anyLong()))
             .willReturn(Optional.of(user));
-        given(accountRepository.findFirstByOrderByIdDesc())
-            .willReturn(Optional.of(Account.builder()
-                .accountNumber("1000000012").build()));
         given(accountRepository.save(any()))
-            .willReturn(Account.builder()
-                .accountUser(user)
-                .accountNumber("1000000013").build());
-        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
+            .willReturn(account);
 
         //when
         AccountDto accountDto = accountService.createAccount(1L, 1000L);
 
         //then
-        verify(accountRepository, times(1)).save(captor.capture());
         assertEquals(12L, accountDto.getUserId());
-        assertEquals("1000000013", captor.getValue().getAccountNumber());
-    }
-
-    @Test
-    void createFirstAccount() throws Exception {
-        //given
-        AccountUser user = AccountUser.builder()
-            .id(15L)
-            .name("Pobi").build();
-        given(accountUserRepository.findById(anyLong()))
-            .willReturn(Optional.of(user));
-        given(accountRepository.findFirstByOrderByIdDesc())
-            .willReturn(Optional.empty());
-        given(accountRepository.save(any()))
-            .willReturn(Account.builder()
-                .accountUser(user)
-                .accountNumber("1000000013").build());
-        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
-
-        //when
-        AccountDto accountDto = accountService.createAccount(1L, 1000L);
-
-        //then
-        verify(accountRepository, times(1)).save(captor.capture());
-        assertEquals(15L, accountDto.getUserId());
-        assertEquals("1000000000", captor.getValue().getAccountNumber());
+        assertEquals("0000000001", account.getAccountNumber());
     }
 
     @Test
